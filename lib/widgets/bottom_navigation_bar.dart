@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:simple_sns_app/screens/post_screen.dart';
+import 'package:simple_sns_app/screens/profile_screen.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
   final Function(int) onTap;
@@ -23,11 +24,18 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     widget.onTap(index);
 
     if (index == 2) {
-      // '추가' 버튼을 눌렀을 때
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PostingScreen()), // PostingScreen으로 이동
+            builder: (context) => const PostingScreen()), // PostingScreen으로 이동
+      );
+    }
+
+    if (index == 4) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const ProfileScreen()), // ProfileScreen으로 이동
       );
     }
   }

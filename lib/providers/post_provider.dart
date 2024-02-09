@@ -1,4 +1,6 @@
 // post_provider.dart
+import 'dart:developer';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:grpc/grpc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +36,7 @@ class PostProvider {
 
       return response;
     } catch (error) {
-      print('포스트 작성 중 오류 발생: $error');
+      log('포스트 작성 중 오류 발생: $error');
       rethrow;
     }
   }
