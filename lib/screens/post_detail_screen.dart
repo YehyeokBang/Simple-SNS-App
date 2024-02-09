@@ -18,7 +18,15 @@ class PostDetailScreen extends StatefulWidget {
 class _PostDetailScreenState extends State<PostDetailScreen> {
   Post? post;
   bool isLoading = false;
+  int? _replyingToCommentId;
   final _postDetailProvider = PostDetailProvider();
+  final _commentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -92,6 +100,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                             const SizedBox(height: 10),
                             buildCommentList(),
+                            buildCommentField(),
                           ],
                         ),
                       ),
@@ -104,41 +113,50 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   }
 
   Widget buildCommentList() {
-    var comments = post!.comments.where((c) => !c.hasParent).toList();
+    List<Widget> commentWidgets = [];
+    var comments = post!.comments;
+
     comments.sort((a, b) => a.id.compareTo(b.id));
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: comments.length,
-      itemBuilder: (context, index) {
-        var comment = comments[index];
-        var childComments =
-            post!.comments.where((c) => c.parentId == comment.id).toList();
-        childComments.sort((a, b) => a.id.compareTo(b.id));
+    for (var comment in comments) {
+      if (!comment.hasParent) {
+        commentWidgets.add(buildComment(comment, 0));
+      } else {
+        var index = commentWidgets.indexWhere(
+            (element) => (element.key as ValueKey).value == comment.parentId);
+        commentWidgets.insert(index + 1, buildComment(comment, 1));
+      }
+    }
 
-        return Container(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            children: <Widget>[
-              buildComment(comment, 0),
-              for (var child in childComments) buildComment(child, 1),
-            ],
-          ),
-        );
-      },
-    );
+    return Column(children: commentWidgets);
   }
 
   Widget buildComment(Comment comment, int depth) {
-    return Padding(
-      padding: EdgeInsets.only(left: 10.0 * depth),
+    return Container(
+      key: ValueKey(comment.id),
+      padding: EdgeInsets.only(left: comment.hasParent == true ? 60.0 : 0.0),
+      color: depth == 0 ? Colors.white : Colors.grey[200],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '${comment.userName}',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Row(
+            children: [
+              Text(
+                '${comment.userName}',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              if (!comment.hasParent)
+                IconButton(
+                  icon: const Icon(Icons.reply),
+                  onPressed: () {
+                    setState(() {
+                      _replyingToCommentId = comment.id;
+                    });
+                  },
+                ),
+            ],
           ),
           const SizedBox(height: 5),
           Text(
@@ -146,9 +164,59 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             style: const TextStyle(fontSize: 14),
           ),
           const SizedBox(height: 10),
+          if (_replyingToCommentId == comment.id) buildReplyField(),
         ],
       ),
     );
+  }
+
+  Widget buildReplyField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _commentController,
+              decoration: const InputDecoration(
+                hintText: '대댓글을 입력하세요...',
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {
+              // 대댓글 작성 로직
+              _writeReply();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _writeReply() async {
+    if (_replyingToCommentId == null) return;
+
+    try {
+      final _ = await _postDetailProvider.writeReply(
+        post!.id,
+        _replyingToCommentId!,
+        _commentController.text,
+      );
+
+      _commentController.clear();
+
+      debugPrint('대댓글 작성 완료');
+
+      await getPostById(); // 대댓글 작성 후 게시글을 다시 불러옴
+    } catch (error) {
+      debugPrint('대댓글 작성 중 오류 발생: $error');
+    } finally {
+      setState(() {
+        _replyingToCommentId = null;
+      });
+    }
   }
 
   Future<void> getPostById() async {
@@ -168,6 +236,48 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         isLoading = false;
       });
       log('Error: $error');
+    }
+  }
+
+  Widget buildCommentField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _commentController,
+              decoration: const InputDecoration(
+                hintText: '댓글을 입력하세요...',
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {
+              // 댓글 작성 로직
+              _writeComment();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _writeComment() async {
+    try {
+      final _ = await _postDetailProvider.writeComment(
+        post!.id,
+        _commentController.text,
+      );
+
+      _commentController.clear();
+
+      await getPostById();
+
+      debugPrint('댓글 작성 완료');
+    } catch (error) {
+      debugPrint('댓글 작성 중 오류 발생: $error');
     }
   }
 }
