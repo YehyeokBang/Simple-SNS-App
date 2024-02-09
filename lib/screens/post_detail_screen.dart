@@ -209,7 +209,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
       debugPrint('대댓글 작성 완료');
 
-      await getPostById(); // 대댓글 작성 후 게시글을 다시 불러옴
+      await getPostById();
     } catch (error) {
       debugPrint('대댓글 작성 중 오류 발생: $error');
     } finally {
