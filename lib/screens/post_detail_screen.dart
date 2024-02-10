@@ -100,7 +100,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                             const SizedBox(height: 10),
                             buildCommentList(),
-                            buildCommentField(),
                           ],
                         ),
                       ),
@@ -109,6 +108,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 },
               ),
             ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 15.0,
+          left: 20.0,
+          right: 5.0,
+        ),
+        child: buildCommentField(),
+      ),
     );
   }
 
@@ -116,15 +123,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     List<Widget> commentWidgets = [];
     var comments = post!.comments;
 
-    comments.sort((a, b) => a.id.compareTo(b.id));
-
     for (var comment in comments) {
       if (!comment.hasParent) {
         commentWidgets.add(buildComment(comment, 0));
       } else {
-        var index = commentWidgets.indexWhere(
-            (element) => (element.key as ValueKey).value == comment.parentId);
-        commentWidgets.insert(index + 1, buildComment(comment, 1));
+        commentWidgets.add(buildComment(comment, 1));
       }
     }
 
@@ -134,62 +137,58 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Widget buildComment(Comment comment, int depth) {
     return Container(
       key: ValueKey(comment.id),
-      padding: EdgeInsets.only(left: comment.hasParent == true ? 60.0 : 0.0),
-      color: depth == 0 ? Colors.white : Colors.grey[200],
+      margin: EdgeInsets.only(
+        left: depth == 1 ? 30.0 : 0.0,
+        right: depth == 1 ? 50.0 : 0.0,
+      ),
+      color: depth == 0 ? Colors.white10 : Colors.grey[200],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: [
-              Text(
-                '${comment.userName}',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Text(
+                    '${comment.userName}',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    DateFormat('yyyy/MM/dd HH:mm').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        comment.createdAt.seconds.toInt() * 1000 +
+                            comment.createdAt.nanos ~/ 1000000,
+                      ),
+                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  Expanded(child: Container()),
+                  if (depth == 0)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _replyingToCommentId = comment.id;
+                          });
+                        },
+                        child: const Icon(Icons.reply, size: 22.0),
+                      ),
+                    ),
+                ],
               ),
-              Spacer(),
-              if (!comment.hasParent)
-                IconButton(
-                  icon: const Icon(Icons.reply),
-                  onPressed: () {
-                    setState(() {
-                      _replyingToCommentId = comment.id;
-                    });
-                  },
-                ),
+              const SizedBox(height: 5),
+              Text(
+                comment.content,
+                style: const TextStyle(fontSize: 14),
+              ),
             ],
           ),
-          const SizedBox(height: 5),
-          Text(
-            comment.content,
-            style: const TextStyle(fontSize: 14),
-          ),
           const SizedBox(height: 10),
-          if (_replyingToCommentId == comment.id) buildReplyField(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildReplyField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: _commentController,
-              decoration: const InputDecoration(
-                hintText: '대댓글을 입력하세요...',
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              // 대댓글 작성 로직
-              _writeReply();
-            },
-          )
         ],
       ),
     );
@@ -247,16 +246,21 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Expanded(
             child: TextField(
               controller: _commentController,
-              decoration: const InputDecoration(
-                hintText: '댓글을 입력하세요...',
+              decoration: InputDecoration(
+                hintText: _replyingToCommentId == null
+                    ? '댓글을 입력하세요...'
+                    : '대댓글을 입력하세요...',
               ),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.send),
             onPressed: () {
-              // 댓글 작성 로직
-              _writeComment();
+              if (_replyingToCommentId == null) {
+                _writeComment();
+              } else {
+                _writeReply();
+              }
             },
           )
         ],
