@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:grpc/grpc.dart';
-import 'package:simple_sns_app/api/v1/user/user.pb.dart';
 import 'package:simple_sns_app/api/v1/user/user.pbgrpc.dart';
 import 'package:simple_sns_app/google/protobuf/timestamp.pb.dart';
 

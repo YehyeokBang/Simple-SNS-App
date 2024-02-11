@@ -26,31 +26,60 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _userIdController,
-              decoration: const InputDecoration(
-                labelText: '아이디',
-              ),
+        child: Align(
+          alignment: const Alignment(-0.0, -0.2),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildInputItem('아이디', _userIdController),
+                buildInputItem('비밀번호', _passwordController, obscureText: true),
+                const SizedBox(height: 16.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _login();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.symmetric(vertical: 16.0),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      '로그인',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: '비밀번호',
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                _login();
-              },
-              child: const Text('로그인'),
-            ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildInputItem(String label, TextEditingController controller,
+      {bool obscureText = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
         ),
       ),
     );
@@ -65,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
       log('토큰: ${response.jwtToken}');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } catch (e) {
       log(e.toString());
