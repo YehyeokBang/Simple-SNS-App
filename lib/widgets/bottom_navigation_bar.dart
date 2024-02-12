@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:simple_sns_app/screens/post_screen.dart';
+import 'package:simple_sns_app/screens/post_search_screen.dart';
 import 'package:simple_sns_app/screens/profile_screen.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
@@ -22,6 +23,15 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
       _selectedIndex = index;
     });
     widget.onTap(index);
+
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const PostSearchScreen()), // PostingScreen으로 이동
+      );
+    }
 
     if (index == 2) {
       Navigator.push(
