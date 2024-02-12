@@ -15,7 +15,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
   late String _selectedGender = '선택안함';
   String _selectedYear = '2000';
   String _selectedMonth = '1';
@@ -28,7 +27,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _userIdController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
-    _ageController.dispose();
     _introduceController.dispose();
     super.dispose();
   }
@@ -46,7 +44,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             buildInputItem('사용자 ID', _userIdController),
             buildInputItem('비밀번호', _passwordController),
             buildInputItem('이름', _nameController),
-            buildInputItem('나이', _ageController),
             buildGenderSelect(),
             buildDatePicker(),
             buildInputItem('자기 소개', _introduceController),
@@ -218,10 +215,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showWarningDialog('이름을 입력해주세요');
       return;
     }
-    if (_ageController.text.isEmpty) {
-      showWarningDialog('나이를 입력해주세요');
-      return;
-    }
 
     signUpUser();
   }
@@ -250,7 +243,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         userId: _userIdController.text,
         password: _passwordController.text,
         name: _nameController.text,
-        age: int.parse(_ageController.text),
+        age: DateTime.now().year - int.parse(_selectedYear) + 1,
         sex: _selectedGender,
         birthday: DateTime(
           int.parse(_selectedYear),

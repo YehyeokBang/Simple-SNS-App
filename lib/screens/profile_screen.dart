@@ -71,7 +71,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ListTile(
                   title: const Text('생일'),
-                  subtitle: Text('${userProfile!.birthday.toDateTime()}'),
+                  subtitle: Text(userProfile!.birthday
+                      .toDateTime()
+                      .toString()
+                      .substring(0, 10)),
                 ),
                 ListTile(
                   title: const Text('소개'),
