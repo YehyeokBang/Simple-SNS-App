@@ -134,6 +134,21 @@ final $typed_data.Uint8List getPostsResponseDescriptor = $convert.base64Decode(
     'ChBHZXRQb3N0c1Jlc3BvbnNlEjsKDnBvc3Rfc3VtbWFyaWVzGAEgAygLMhQudjEucG9zdC5Qb3'
     'N0U3VtbWFyeVINcG9zdFN1bW1hcmllcw==');
 
+@$core.Deprecated('Use searchPostsRequestDescriptor instead')
+const SearchPostsRequest$json = {
+  '1': 'SearchPostsRequest',
+  '2': [
+    {'1': 'keyword', '3': 1, '4': 1, '5': 9, '10': 'keyword'},
+    {'1': 'page', '3': 2, '4': 1, '5': 13, '10': 'page'},
+    {'1': 'limit', '3': 3, '4': 1, '5': 13, '10': 'limit'},
+  ],
+};
+
+/// Descriptor for `SearchPostsRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List searchPostsRequestDescriptor = $convert.base64Decode(
+    'ChJTZWFyY2hQb3N0c1JlcXVlc3QSGAoHa2V5d29yZBgBIAEoCVIHa2V5d29yZBISCgRwYWdlGA'
+    'IgASgNUgRwYWdlEhQKBWxpbWl0GAMgASgNUgVsaW1pdA==');
+
 @$core.Deprecated('Use getPostByIdRequestDescriptor instead')
 const GetPostByIdRequest$json = {
   '1': 'GetPostByIdRequest',

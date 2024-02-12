@@ -659,6 +659,84 @@ class GetPostsResponse extends $pb.GeneratedMessage {
   $core.List<PostSummary> get postSummaries => $_getList(0);
 }
 
+class SearchPostsRequest extends $pb.GeneratedMessage {
+  factory SearchPostsRequest({
+    $core.String? keyword,
+    $core.int? page,
+    $core.int? limit,
+  }) {
+    final $result = create();
+    if (keyword != null) {
+      $result.keyword = keyword;
+    }
+    if (page != null) {
+      $result.page = page;
+    }
+    if (limit != null) {
+      $result.limit = limit;
+    }
+    return $result;
+  }
+  SearchPostsRequest._() : super();
+  factory SearchPostsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SearchPostsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SearchPostsRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'v1.post'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'keyword')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'page', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'limit', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SearchPostsRequest clone() => SearchPostsRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SearchPostsRequest copyWith(void Function(SearchPostsRequest) updates) => super.copyWith((message) => updates(message as SearchPostsRequest)) as SearchPostsRequest;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SearchPostsRequest create() => SearchPostsRequest._();
+  SearchPostsRequest createEmptyInstance() => create();
+  static $pb.PbList<SearchPostsRequest> createRepeated() => $pb.PbList<SearchPostsRequest>();
+  @$core.pragma('dart2js:noInline')
+  static SearchPostsRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SearchPostsRequest>(create);
+  static SearchPostsRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get keyword => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set keyword($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasKeyword() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKeyword() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get page => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set page($core.int v) { $_setUnsignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPage() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get limit => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set limit($core.int v) { $_setUnsignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasLimit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimit() => clearField(3);
+}
+
 class GetPostByIdRequest extends $pb.GeneratedMessage {
   factory GetPostByIdRequest({
     $core.int? id,

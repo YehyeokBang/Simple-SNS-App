@@ -29,6 +29,14 @@ class PostServiceClient extends $grpc.Client {
       '/v1.post.PostService/GetPosts',
       ($0.GetPostsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.GetPostsResponse.fromBuffer(value));
+  static final _$searchPostsByTitle = $grpc.ClientMethod<$0.SearchPostsRequest, $0.GetPostsResponse>(
+      '/v1.post.PostService/SearchPostsByTitle',
+      ($0.SearchPostsRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.GetPostsResponse.fromBuffer(value));
+  static final _$searchPostsByWriter = $grpc.ClientMethod<$0.SearchPostsRequest, $0.GetPostsResponse>(
+      '/v1.post.PostService/SearchPostsByWriter',
+      ($0.SearchPostsRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.GetPostsResponse.fromBuffer(value));
   static final _$getPostById = $grpc.ClientMethod<$0.GetPostByIdRequest, $0.GetPostByIdResponse>(
       '/v1.post.PostService/GetPostById',
       ($0.GetPostByIdRequest value) => value.writeToBuffer(),
@@ -54,6 +62,14 @@ class PostServiceClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.GetPostsResponse> getPosts($0.GetPostsRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getPosts, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.GetPostsResponse> searchPostsByTitle($0.SearchPostsRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$searchPostsByTitle, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.GetPostsResponse> searchPostsByWriter($0.SearchPostsRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$searchPostsByWriter, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.GetPostByIdResponse> getPostById($0.GetPostByIdRequest request, {$grpc.CallOptions? options}) {
@@ -88,6 +104,20 @@ abstract class PostServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetPostsRequest.fromBuffer(value),
         ($0.GetPostsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SearchPostsRequest, $0.GetPostsResponse>(
+        'SearchPostsByTitle',
+        searchPostsByTitle_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SearchPostsRequest.fromBuffer(value),
+        ($0.GetPostsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SearchPostsRequest, $0.GetPostsResponse>(
+        'SearchPostsByWriter',
+        searchPostsByWriter_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SearchPostsRequest.fromBuffer(value),
+        ($0.GetPostsResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetPostByIdRequest, $0.GetPostByIdResponse>(
         'GetPostById',
         getPostById_Pre,
@@ -119,6 +149,14 @@ abstract class PostServiceBase extends $grpc.Service {
     return getPosts(call, await request);
   }
 
+  $async.Future<$0.GetPostsResponse> searchPostsByTitle_Pre($grpc.ServiceCall call, $async.Future<$0.SearchPostsRequest> request) async {
+    return searchPostsByTitle(call, await request);
+  }
+
+  $async.Future<$0.GetPostsResponse> searchPostsByWriter_Pre($grpc.ServiceCall call, $async.Future<$0.SearchPostsRequest> request) async {
+    return searchPostsByWriter(call, await request);
+  }
+
   $async.Future<$0.GetPostByIdResponse> getPostById_Pre($grpc.ServiceCall call, $async.Future<$0.GetPostByIdRequest> request) async {
     return getPostById(call, await request);
   }
@@ -133,6 +171,8 @@ abstract class PostServiceBase extends $grpc.Service {
 
   $async.Future<$0.WritePostResponse> writePost($grpc.ServiceCall call, $0.WritePostRequest request);
   $async.Future<$0.GetPostsResponse> getPosts($grpc.ServiceCall call, $0.GetPostsRequest request);
+  $async.Future<$0.GetPostsResponse> searchPostsByTitle($grpc.ServiceCall call, $0.SearchPostsRequest request);
+  $async.Future<$0.GetPostsResponse> searchPostsByWriter($grpc.ServiceCall call, $0.SearchPostsRequest request);
   $async.Future<$0.GetPostByIdResponse> getPostById($grpc.ServiceCall call, $0.GetPostByIdRequest request);
   $async.Future<$0.UpdatePostResponse> updatePost($grpc.ServiceCall call, $0.UpdatePostRequest request);
   $async.Future<$0.DeletePostResponse> deletePost($grpc.ServiceCall call, $0.DeletePostRequest request);
